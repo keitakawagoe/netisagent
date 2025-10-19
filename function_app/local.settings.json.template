@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AZURE_SEARCH_ENDPOINT": "https://your-search-service.search.windows.net",
+    "AZURE_SEARCH_API_KEY": "your-search-api-key",
+    "AZURE_SEARCH_INDEX_NAME": "netis-index",
+    "AZURE_OPENAI_ENDPOINT": "https://your-openai-service.openai.azure.com/",
+    "AZURE_OPENAI_API_KEY": "your-openai-api-key",
+    "AZURE_OPENAI_DEPLOYMENT_NAME": "gpt-4.1",
+    "AZURE_OPENAI_API_VERSION": "2024-02-15-preview",
+    "AZURE_OPENAI_EMBEDDING_DEPLOYMENT": "text-embedding-3-small"
+  }
+}

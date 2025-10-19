@@ -1,0 +1,164 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NETIS Search API",
+    "version": "1.0.0",
+    "description": "NETIS建設技術検索API - Azure AI Foundry Agent用"
+  },
+  "servers": [
+    {
+      "url": "https://func-api-emm626t4gwnom.azurewebsites.net"
+    }
+  ],
+  "paths": {
+    "/api/search": {
+      "get": {
+        "operationId": "search_netis",
+        "summary": "NETIS技術を検索",
+        "description": "建設技術情報データベース（NETIS）から、自然言語クエリで技術を検索します。ハイブリッド検索（キーワード + ベクトル）を使用し、意味的に類似した技術も検出します。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "検索クエリ（例: トンネルの漏水対策、環境負荷が少ない工法）"
+          },
+          {
+            "name": "top",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 20
+            },
+            "description": "取得件数（デフォルト: 10、最大: 20）"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "工事分類フィルタ（例: トンネル工事、道路工事）"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "検索成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "実行された検索クエリ"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "検索結果の件数"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "技術ID"
+                          },
+                          "tech_name": {
+                            "type": "string",
+                            "description": "技術名称"
+                          },
+                          "abstract": {
+                            "type": "string",
+                            "description": "新規性・期待される効果"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "NETIS URL"
+                          },
+                          "overview": {
+                            "type": "string",
+                            "description": "従来技術と比較"
+                          },
+                          "innovation": {
+                            "type": "string",
+                            "description": "新規性・効果の詳細"
+                          },
+                          "conditions": {
+                            "type": "string",
+                            "description": "適用条件"
+                          },
+                          "scope": {
+                            "type": "string",
+                            "description": "適用範囲"
+                          },
+                          "notes": {
+                            "type": "string",
+                            "description": "留意事項"
+                          },
+                          "category1": {
+                            "type": "string",
+                            "description": "工事分類1"
+                          },
+                          "category2": {
+                            "type": "string",
+                            "description": "工事分類2"
+                          },
+                          "category3": {
+                            "type": "string",
+                            "description": "工事分類3"
+                          },
+                          "evaluation": {
+                            "type": "string",
+                            "description": "事後評価"
+                          },
+                          "subtitle": {
+                            "type": "string",
+                            "description": "サブタイトル"
+                          },
+                          "score": {
+                            "type": "number",
+                            "description": "検索スコア（関連度）"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "リクエストエラー（queryパラメータ未指定など）"
+          },
+          "500": {
+            "description": "サーバーエラー"
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-functions-key"
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://func-api-emm626t4gwnom.azurewebsites.net"
+      "url": "https://netis-search-api.azurewebsites.net"
     }
   ],
   "paths": {

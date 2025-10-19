@@ -29,7 +29,7 @@ env/
 ENV/
 
 # IDE
-.vscode/
+
 .idea/
 *.swp
 *.swo

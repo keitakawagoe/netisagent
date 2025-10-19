@@ -26,7 +26,6 @@ venv.bak/
 .python_packages/
 
 # Visual Studio Code
-.vscode/
 
 # OS
 .DS_Store

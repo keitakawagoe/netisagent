@@ -221,14 +221,15 @@ class AzureSearchIndexer:
         self.index_client.delete_index(self.index_name)
         print("Index deleted")
 
-    def upload_documents(self, documents: List[Dict[str, Any]], batch_size: int = 100):
+    def upload_documents(self, documents: List[Dict[str, Any]], batch_size: int = 10):
         """
-        ドキュメントをアップロード
+        ドキュメントをアップロード（リトライ機能付き）
 
         Args:
             documents: アップロードするドキュメントのリスト
-            batch_size: バッチサイズ
+            batch_size: バッチサイズ（デフォルト10に変更）
         """
+        import time
         search_client = SearchClient(
             endpoint=self.endpoint,
             index_name=self.index_name,
@@ -240,10 +241,32 @@ class AzureSearchIndexer:
 
         for i in range(0, total, batch_size):
             batch = documents[i:i + batch_size]
-            result = search_client.upload_documents(documents=batch)
+            batch_num = i // batch_size + 1
 
-            succeeded = sum([1 for r in result if r.succeeded])
-            print(f"Batch {i // batch_size + 1}: {succeeded}/{len(batch)} documents uploaded")
+            # リトライ機能
+            max_retries = 3
+            for retry in range(max_retries):
+                try:
+                    result = search_client.upload_documents(documents=batch)
+                    succeeded = sum([1 for r in result if r.succeeded])
+                    print(f"Batch {batch_num}: {succeeded}/{len(batch)} documents uploaded")
+
+                    # 成功したらbreak
+                    if succeeded == len(batch):
+                        break
+                    else:
+                        print(f"  Warning: {len(batch) - succeeded} documents failed")
+
+                except Exception as e:
+                    if retry < max_retries - 1:
+                        print(f"  Batch {batch_num} failed (retry {retry + 1}/{max_retries}): {str(e)}")
+                        time.sleep(2)  # 2秒待機してリトライ
+                    else:
+                        print(f"  ERROR: Batch {batch_num} failed after {max_retries} retries: {str(e)}")
+                        raise
+
+            # バッチ間で少し待機（レート制限対策）
+            time.sleep(0.5)
 
         print("All documents uploaded successfully")
 

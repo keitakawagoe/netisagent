@@ -74,7 +74,7 @@ def main():
 
         # ステップ4: ドキュメントのアップロード
         print("\n[Step 4/4] Uploading documents to search index...")
-        indexer.upload_documents(documents, batch_size=100)
+        indexer.upload_documents(documents, batch_size=10)
 
         # 最終統計
         final_stats = indexer.get_index_stats()
